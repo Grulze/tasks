@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Task</title>
+    <script type="text/javascript">
+        function postToUrl(path, meth) {
+            fetch(path, {
+                method: meth,
+            });
+            setTimeout(function(){location.href='http://127.0.0.1:8000/'}, 50);
+
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #000;
+            position: relative;
+        }
+        h1 {
+            text-align: left;
+            font-size: calc(24px * 1.7);
+            margin-bottom: 20px;
+            width: 40%;
+            margin-top: 0px;
+        }
+        .created-by {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 19px;
+            margin-right: 30px;
+            margin-top: 40px;
+        }
+        .completed {
+            font-size: 19px;
+            color: red;
+        }
+        .tasks, .new-task, .search-task {
+            border: 1px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .tasks-content {
+            padding: 10px;
+            border: 1px solid #000;
+        }
+        h2 {
+            text-align: center;
+        }
+        .completed-btn {
+            color: white;
+            background-color: green;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .delete-btn {
+            color: white;
+            background-color: red;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-left: 105px;
+        }
+        .com-delete-btn {
+            color: white;
+            background-color: red;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: -14px;
+            margin-left: 100px;
+        }
+        input, textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #000;
+        }
+        textarea {
+            width: calc(100% - 20px);
+            resize: none;
+        }
+        .submit-btn {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-inline {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        label {
+            width: 200px;
+        }
+        .search-btn {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .show-all-btn {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-left: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h1>YourTask</h1>
+
+            <div class="created-by">
+                Created by: Ilya Yaschenko
+            </div>
+        </div>
+        <div class="new-task">
+            <h2>New task</h2>
+            <form action="/" method="post">
+                <div class="form-inline">
+                    <label for="from">From:*</label>
+                    <input type="text" id="from" name="customer">
+                </div>
+
+                <div class="form-inline">
+                    <label for="to">To:</label>
+                    <input type="text" id="to" name="executor">
+                </div>
+
+                <div class="form-inline">
+                    <label for="limit">Limit (hours):</label>
+                    <input type="text" id="limit" name="time_limit">
+                </div>
+
+                <label for="description">Description:*</label>
+                <textarea id="description" name="description" rows="4"></textarea>
+                <div>* - required fields.</div>
+                <button type="submit" class="submit-btn">Add Task</button>
+            </form>
+        </div>
+
+        <div class="search-task">
+            <h2>Search tasks</h2>
+            <form action="/" method="get">
+                <div class="form-inline">
+                    <label for="executor">Executor:</label>
+                    <input type="text" id="executor" name="executor">
+                </div>
+                <button type="submit" class="search-btn">Search</button>
+                <button type="submit" class="show-all-btn" onclick="location.href='http://127.0.0.1:8000/">Show all</button>
+            </form>
+        </div>
+
+        <div class="tasks">
+            <h2>Current tasks</h2>
+            {% for task in tasks%}
+            <div class="tasks-content">
+                <p><strong>From:</strong> {{ task.customer }} <strong>To:</strong> {{ task.executor }} <strong>Limit:</strong> {{ task.time_limit }}</p>
+                <p><strong>Description:</strong></p>
+                <p>{{ task.description }}</p>
+                <p><strong>Created:</strong> {{ task.time_create }}</p>
+                {% if not task.completed %}
+                <button class='completed-btn' onclick="postToUrl('/complete/{{ task.id }}', 'PATCH')">Complete</button>
+                <button class="delete-btn" onclick="postToUrl('/delete/{{ task.id }}', 'DELETE')">Delete</button>
+                {% else %}
+                <div class="completed">
+                Completed
+                    <button class="com-delete-btn" onclick="postToUrl('/delete/{{ task.id }}', 'DELETE')">Delete</button>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
