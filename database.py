@@ -25,7 +25,7 @@ class TaskDB(Base):
     time_create: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
 
 
-def __create_table():
+def create_table():
     """
     Create all tables.
     """
