@@ -31,13 +31,11 @@ async def new_task(request: Request) -> Response:
     :return: html page
     """
     form = await request.form()
-    if not form['time_limit'].isdigit():
-        form._dict['time_limit'] = None
-    if form['executor'] == '':
-        form._dict['executor'] = None
     if form['customer'] == '' or form['description'] == '':
         return HTMLResponse(from_and_description, status_code=200)
+    print(form)
     task = AddTask.model_validate(form)
+    print(task)
     await add_task_db(task)
     return RedirectResponse('/', status_code=303)
 
